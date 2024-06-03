@@ -21,7 +21,7 @@ def main():
 
     # 打印main函数的调用栈
     stack = traceback.extract_stack()
-    with open(get_log_path(), "w", encoding="utf-8") as f:
+    with open(get_log_path(), "a", encoding="utf-8") as f:
         for frame in stack:
             f.write(f'File "{frame.filename}", line {frame.lineno}, in {frame.name}\n')
 
@@ -58,5 +58,5 @@ if __name__ == "__main__":
         TimerManager.clear_timers()
 
 
-# pipenv run pyinstaller --noconfirm --onedir --console --distpath Release/ --clean --hidden-import=ultralytics  "D:/Work/remake/src/run.py"
-# pipenv run pyinstaller --noconfirm --onedir --console --debug "all" --distpath Release/ --clean --hidden-import=ultralytics "D:/Work/remake/src/run.py"
+# pipenv run pyinstaller --noconfirm --onedir --console --clean "D:/Work/remake/src/run.py"
+# pipenv run pyinstaller --noconfirm --onedir --console --debug "all" --clean --hidden-import=ultralytics "D:/Work/remake/src/run.py"
