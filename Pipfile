@@ -12,6 +12,7 @@ pyinstaller = "*"
 lapx = "*"
 ultralytics = "*"
 pyqt5 = "*"
+pywin32 = "*"
 
 [dev-packages]
 
