@@ -59,4 +59,5 @@ if __name__ == "__main__":
 
 
 # pipenv run pyinstaller --noconfirm --onedir --console --clean "D:/Work/remake/src/run.py"
-# pipenv run pyinstaller --noconfirm --onedir --console --debug "all" --clean --hidden-import=ultralytics "D:/Work/remake/src/run.py"
+# pipenv run pyinstaller --noconfirm --onedir --console --debug "all" --clean "D:/Work/remake/src/run.py"
+# pipenv run pyinstaller .\run.spec --noconfir
