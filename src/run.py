@@ -56,7 +56,6 @@ if __name__ == "__main__":
     finally:
         log_window.close_window()
         TimerManager.clear_timers()
-        time.sleep(30)
 
 
 # pipenv run pyinstaller --noconfirm --onedir --console --distpath Release/ --clean --hidden-import=ultralytics  "D:/Work/remake/src/run.py"
