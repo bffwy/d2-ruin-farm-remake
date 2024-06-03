@@ -1,0 +1,13 @@
+[base]
+membership_type = 3
+destiny_membership_id = ""
+x_api_key = ""
+client_id = ""
+client_secret = ""
+code = ""
+refresh_token = ""
+get_postmaster_class = ["Hunter"]
+
+armor_sum_required = 65 # 护甲属性总和要求
+filter_items = [3668817296, 839344841] # 过滤刀和弓箭
+
