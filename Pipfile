@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+verify_ssl = true
+name = "pip_conf_index_global"
+
+[packages]
+loguru = "*"
+pydirectinput = "*"
+opencv-python = "*"
+pillow = "*"
+pyinstaller = "*"
+lapx = "*"
+ultralytics = "*"
+pyqt5 = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.11"
