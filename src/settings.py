@@ -24,6 +24,7 @@ class BaseSettings:
     连续失败次数: int
     进图等待间隔: float
     重置进度次数: int
+    大师难度: bool
 
 
 @dataclasses.dataclass

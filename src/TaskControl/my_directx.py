@@ -62,13 +62,15 @@ def open_map_and_switch_difficulty():
     time.sleep(0.3)
     leftClick()
 
-    # 点开难度选择
-    time.sleep(1.5)
-    move_to_and_left_click(*get_resize_bridge(1960, 1110))
-
-    # 选择大师难度
-    time.sleep(1.5)
-    move_to_and_left_click(*get_resize_bridge(455, 460))
+    if base_settings.大师难度:
+        # 点开难度选择
+        time.sleep(1.5)
+        move_to_and_left_click(*get_resize_bridge(1960, 1110))
+        # 选择大师难度
+        time.sleep(1.5)
+        move_to_and_left_click(*get_resize_bridge(455, 460))
+    else:
+        time.sleep(3.1)
 
 
 def start_next_round(reward=False):
