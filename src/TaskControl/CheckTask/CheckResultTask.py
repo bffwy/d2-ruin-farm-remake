@@ -51,6 +51,7 @@ class CheckCompleteTask(CheckTaskBase):
         self.stop_check()
         self.stop = False
         self.finish_check = False
+        self.event.triggered = False
         self.check_boss_name_exist()
         self.timeout_timer_id = TimerManager.add_timer(30, self.event_time_out)
 
