@@ -1,0 +1,30 @@
+{
+    "actions": [
+        {
+            "type": "press",
+            "key": "m"
+        },
+        {
+            "type": "wait",
+            "duration": 1.2,
+            "blocking": true
+        },
+        {
+            "注释": "选中废墟",
+            "type": "mouse_move",
+            "base_on_2560": true,
+            "absolute": [
+                2360,
+                720
+            ]
+        },
+        {
+            "type": "wait",
+            "duration": 0.1,
+            "blocking": true
+        },
+        {
+            "type": "leftClick"
+        }
+    ]
+}

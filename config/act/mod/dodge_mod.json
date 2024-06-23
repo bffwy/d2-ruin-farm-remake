@@ -1,0 +1,69 @@
+{
+    "actions": [
+        {
+            "type": "action",
+            "name": "开boss",
+            "blocking": true
+        },
+        {
+            "type": "wait",
+            "duration": 0.5,
+            "blocking": true
+        },
+        {
+            "注释": "往右移动 1.s",
+            "type": "key",
+            "name": "d",
+            "duration": 1,
+            "blocking": true
+        },
+        {
+            "注释": "按下闪身",
+            "type": "press",
+            "key": "0"
+        },
+        {
+            "注释": "闪身位置往后",
+            "type": "key",
+            "name": "s",
+            "duration": 0.2,
+            "blocking": true
+        },
+        {
+            "type": "wait",
+            "duration": 1,
+            "blocking": true
+        },
+        {
+            "注释": "往前走 2.2 s",
+            "type": "key",
+            "name": "w",
+            "duration": 2.2,
+            "blocking": true
+        },
+        {
+            "注释": "开镜瞄准",
+            "type": "mouseDown",
+            "key": "right"
+        },
+        {
+            "type": "wait",
+            "duration": 0.3,
+            "blocking": true
+        },
+        {
+            "注释": "移到黄血怪预瞄位置",
+            "type": "mouse_move",
+            "relative": [
+                -218,
+                140
+            ]
+        },
+        {
+            "注释": "射击前等待",
+            "type": "wait",
+            "duration": 5.061,
+            "blocking": true
+        }
+    ]
+}

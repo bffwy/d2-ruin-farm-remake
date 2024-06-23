@@ -2,37 +2,116 @@
     "CheckRebornTask": {
         "check_similarity": 0.8,
         "check_interval": 0.5,
-        "reborn_time_out": 15,
-        "_comment": "检测玩家重生, check_similarity 表示相似度（以下一样），check_interval 表示检测间隔（以下一样），reborn_time_out 表示玩家重生超时时间"
+        "reborn_time_out": 25,
+        "_comment": "检测玩家重生, check_similarity 表示相似度（以下一样），check_interval 表示检测间隔（以下一样），reborn_time_out 表示玩家重生超时时间",
+        "check_box": [
+            155,
+            340,
+            365,
+            385
+        ],
+        "check_image": "reborn_tag_new",
+        "base_on_2560": true,
+        "debug": false
     },
     "CheckBossExitTask": {
         "check_interval": 0.3,
         "check_conf": 0.6,
         "save_result": false,
+        "check_time_out": 30,
         "_comment": "检测boss传送回来, check_conf 表示boss的置信度，save_result 表示是否保存结果, 会保存结果到debug目录"
     },
     "CheckCompleteTask": {
         "check_interval": 0.3,
         "check_similarity": 0.1,
+        "check_time_out": 30,
+        "check_box": [
+            857,
+            1300,
+            1705,
+            1320
+        ],
+        "check_image": "boss_name",
+        "base_on_2560": true,
+        "debug": false,
         "_comment": "检测boss血条消失，check_interval太大可能会导致进牢里"
     },
     "CheckXReadyTask": {
         "check_interval": 3,
-        "check_similarity": 0.85,
+        "check_similarity": 0.8,
         "re_enter_map_check_time": 20,
         "repeated_fail_max": 80,
+        "check_box": [
+            252,
+            1233,
+            334,
+            1318
+        ],
+        "check_image": "x",
+        "base_on_2560": true,
+        "debug": false,
         "_comment": "检测x技能就绪，re_enter_map_check_time是连续检测失败的次数，如果大于这个次数会重新进图，repeated_fail_max是连续失败的最大次数，如果大于这个次数会结束进程（一般是进牢里了）"
+    },
+    "CheckDodgeReadyTask": {
+        "check_interval": 3,
+        "check_similarity": 0.8,
+        "re_enter_map_check_time": 20,
+        "repeated_fail_max": 80,
+        "check_box": [
+            340,
+            1228,
+            422,
+            1306
+        ],
+        "check_image": "class_skill",
+        "base_on_2560": true,
+        "debug": false,
+        "_comment": "检测闪身技能就绪，re_enter_map_check_time是连续检测失败的次数，如果大于这个次数会重新进图，repeated_fail_max是连续失败的最大次数，如果大于这个次数会结束进程（一般是进牢里了）"
     },
     "EnterMapTask": {
         "enter_map_time": 20,
         "check_load_map_time_out_interval": 10,
         "check_similarity": 0.7,
         "check_interval": 1,
+        "check_box": [
+            260,
+            100,
+            535,
+            170
+        ],
+        "check_image": "enter_map",
+        "base_on_2560": true,
+        "debug": false,
         "_comment": "检测进图， enter_map_time是进图飞的时间， check_load_map_time_out_interval是进图之后的检测超时时间"
     },
     "PlayerDieCheckTask": {
         "die_check_similarity": 0.8,
         "check_interval": 0.5,
+        "check_time_out": 120,
+        "check_box": [
+            0,
+            60,
+            610,
+            240
+        ],
+        "check_image": "check_die_new",
+        "base_on_2560": true,
+        "debug": false,
         "_comment": "检测玩家死亡"
+    },
+    "CheckShieldTask": {
+        "check_similarity": 0.96,
+        "check_interval": 0.5,
+        "check_time_out": 2.5,
+        "_comment": "检测感应护盾",
+        "check_box": [
+            990,
+            128,
+            1110,
+            150
+        ],
+        "check_image": "finisher_hp_bar",
+        "base_on_2560": true,
+        "debug": false
     }
 }

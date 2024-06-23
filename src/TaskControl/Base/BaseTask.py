@@ -7,7 +7,6 @@ from utils import get_real_path
 class Event:
     def __init__(self):
         self.data = {}
-        self.triggered = False
         self.listeners = []
 
     def add_listener(self, listener):
@@ -18,13 +17,13 @@ class Event:
             if callable(listener):
                 Global_Queue.put((listener, self))
                 # listener(self)
-        self.triggered = True
 
 
 class Task:
     def __init__(self):
         self.event = Event()
         self.init()
+        self.finish_check = False
 
     def init(self):
         file_path = get_real_path("task_config.json", "config")
@@ -43,7 +42,7 @@ class Task:
         self.event.add_listener(func)
 
     def event_time_out(self):
-        if self.event.triggered:
+        if self.finish_check:
             return
         # self.event.data["time_out"] = 1
         self.event.trigger()

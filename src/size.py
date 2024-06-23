@@ -18,26 +18,11 @@ def get_resize(*points):
     return tuple(chain.from_iterable(resize(*point) for point in points))
 
 
-def get_w_resize(x):
-    return int(x * RESIZE_RATIO_WIDTH)
-
-
 def get_resize_bridge(x, y):
     return get_resize((x, y))
 
 
-X_START_POSITION = get_resize((252, 1233))
-X_WIDTH, X_HEIGHT = get_resize((82, 85))
-
-
-X_START_POSITION = get_resize((252, 1233))
-X_WIDTH, X_HEIGHT = get_resize((82, 85))
-
-X_BBOX = (
-    *X_START_POSITION,
-    X_START_POSITION[0] + X_WIDTH,
-    X_START_POSITION[1] + X_HEIGHT,
-)
+X_BBOX = get_resize((252, 1233), (334, 1318))
 
 HP_BAR_BBOX_ALIVE = get_resize((990, 128), (1110, 150))
 
@@ -51,4 +36,4 @@ ENTER_MAP_BBOX = get_resize((260, 100), (535, 170))
 
 REBORN_BBOX = get_resize((155, 340), (365, 385))
 
-FULL_SCREEN_BBOX = get_resize((0, 0), (MONITOR_WIDTH, MONITOR_HEIGHT))
+CLASS_SKILL_BBOX = get_resize((340, 1228), (422, 1306))

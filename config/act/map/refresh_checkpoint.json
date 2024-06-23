@@ -1,0 +1,53 @@
+{
+    "actions": [
+        {
+            "type": "action",
+            "name": "打开地图和难度选择",
+            "blocking": true
+        },
+        {
+            "type": "wait",
+            "duration": 1,
+            "blocking": true
+        },
+        {
+            "注释": "移到进度位置",
+            "type": "mouse_move",
+            "base_on_2560": true,
+            "absolute": [
+                1805,
+                1115
+            ]
+        },
+        {
+            "type": "wait",
+            "duration": 0.5,
+            "blocking": true
+        },
+        {
+            "注释": "f 进度",
+            "type": "key",
+            "name": "f",
+            "duration": 5,
+            "blocking": true
+        },
+        {
+            "type": "press",
+            "key": "esc"
+        },
+        {
+            "type": "wait",
+            "duration": 0.5,
+            "blocking": true
+        },
+        {
+            "type": "press",
+            "key": "esc"
+        },
+        {
+            "type": "wait",
+            "duration": 0.5,
+            "blocking": true
+        }
+    ]
+}

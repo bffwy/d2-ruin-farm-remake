@@ -33,6 +33,8 @@ class TimerManager:
     def _timer_callback(cls, timer_id):
         repeat = False
         with cls.lock:
+            if timer_id not in cls.timers:
+                return
             timer = cls.timers[timer_id]
             try:
                 timer["func"](*timer["args"])
@@ -41,18 +43,20 @@ class TimerManager:
 
                 traceback.print_exc()
                 with open(get_log_path(), "a", encoding="utf-8") as f:
+                    f.write(f"traceback at {timer['func'].__name__}" + "\n")
                     f.write(traceback.format_exc() + "\n")
                     f.write(f"{e}\n")
             repeat = timer["repeat"]
             if not repeat:
-                del cls.timers[timer_id]
+                if timer_id in cls.timers:
+                    del cls.timers[timer_id]
         if repeat:
             cls._start_timer(timer_id)
 
     @classmethod
     def cancel_timer(cls, timer_id):
         with cls.lock:
-            if timer_id in cls.timers:
+            if timer_id and timer_id in cls.timers:
                 timer = cls.timers[timer_id]
                 timer["timer"].cancel()
                 del cls.timers[timer_id]

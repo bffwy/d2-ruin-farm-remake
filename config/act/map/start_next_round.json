@@ -1,0 +1,31 @@
+{
+    "actions": [
+        {
+            "type": "action",
+            "name": "打开地图和难度选择",
+            "blocking": true
+        },
+        {
+            "type": "wait",
+            "duration": 1,
+            "blocking": true
+        },
+        {
+            "注释": "移动 开始 按钮位置",
+            "type": "mouse_move",
+            "base_on_2560": true,
+            "absolute": [
+                2180,
+                1210
+            ]
+        },
+        {
+            "type": "wait",
+            "duration": 0.1,
+            "blocking": true
+        },
+        {
+            "type": "leftClick"
+        }
+    ]
+}

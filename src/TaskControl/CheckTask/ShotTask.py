@@ -1,7 +1,7 @@
 from TaskControl.Base.CheckTaskBase import CheckTaskBase
 from TaskControl.my_directx import *
 from TaskControl.Base.TimerManager import TimerManager
-from screenshot import FULL_SCREEN_BBOX, ImageGrab
+from PIL import ImageGrab
 import uuid
 import random
 import os
@@ -21,29 +21,20 @@ class ShotTask(CheckTaskBase):
         super().__init__()
         self.timer_id = None
         self.finish_check = False
-        self.stop = False
 
     def start_check(self):
         return
         if get_files_num() >= 400:
             return
         self.stop_check()
-        self.stop = False
         self.finish_check = False
         random_start = random.uniform(0.2, 3)
         self.timer_id = TimerManager.add_timer(random_start, self.shot_all_screen)
 
-    def stop_check(self):
-        if self.timer_id:
-            TimerManager.cancel_timer(self.timer_id)
-            self.timer_id = None
-        self.finish_check = True
-        self.stop = True
-
     def shot_all_screen(self):
         if self.finish_check:
             return
-        image = ImageGrab.grab(bbox=FULL_SCREEN_BBOX)
+        image = ImageGrab.grab(all_screens=True)
         uuid_str = uuid.uuid4()
         file_name = f"{uuid_str}_all.png"
         image.save(f"./debug/yolov8/{file_name}")

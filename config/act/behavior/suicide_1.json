@@ -1,0 +1,53 @@
+{
+    "actions": [
+        {
+            "注释": "切1号位武器自杀",
+            "type": "press",
+            "key": "1"
+        },
+        {
+            "type": "wait",
+            "duration": 1,
+            "blocking": true
+        },
+        {
+            "type": "mouse_move",
+            "relative": [
+                1800,
+                600
+            ]
+        },
+        {
+            "type": "wait",
+            "duration": 0.5,
+            "blocking": true
+        },
+        {
+            "type": "leftClick"
+        },
+        {
+            "type": "wait",
+            "duration": 0.8,
+            "blocking": true
+        },
+        {
+            "type": "leftClick"
+        },
+        {
+            "type": "wait",
+            "duration": 0.8,
+            "blocking": true
+        },
+        {
+            "type": "leftClick"
+        },
+        {
+            "type": "wait",
+            "duration": 0.8,
+            "blocking": true
+        },
+        {
+            "type": "leftClick"
+        }
+    ]
+}

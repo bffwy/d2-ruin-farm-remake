@@ -2,6 +2,8 @@ from functools import wraps
 from loguru import logger
 import os
 import sys
+import win32gui
+import win32con
 
 
 def image_log(func: callable):
@@ -65,7 +67,7 @@ def get_real_path(relative_path, dir_name):
 def get_log_path():
     current_dir = os.path.dirname(os.path.abspath(__file__))
     target_dir = os.path.join(current_dir, "..", "logs")
-    file_path = os.path.join(target_dir, "running.log")
+    file_path = os.path.join(target_dir, "RuinFarmTask_running.log")
     real_path = os.path.abspath(file_path)
     return real_path
 
@@ -86,3 +88,25 @@ class Singleton:
         if not cls._instance:
             cls._instance = super(Singleton, cls).__new__(cls, *args, **kwargs)
         return cls._instance
+
+
+def active_window(match_string="Destiny 2"):
+
+    def enum_windows():
+        def callback(hwnd, windows):
+            if win32gui.IsWindowVisible(hwnd) and win32gui.GetWindowText(hwnd):
+                windows.append((hwnd, win32gui.GetWindowText(hwnd)))
+
+        windows = []
+        win32gui.EnumWindows(callback, windows)
+        return windows
+
+    windows = enum_windows()
+
+    for hwnd, title in windows:
+        if match_string in title and ("Tiger D3D Window" == win32gui.GetClassName(hwnd)):
+            win32gui.ShowWindow(hwnd, 5)
+            win32gui.SetForegroundWindow(hwnd)
+            win32gui.ShowWindow(hwnd, win32con.SW_SHOWMAXIMIZED)
+            win32gui.BringWindowToTop(hwnd)
+            break

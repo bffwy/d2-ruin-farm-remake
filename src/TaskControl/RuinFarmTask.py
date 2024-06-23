@@ -2,30 +2,33 @@ import asyncio
 import threading
 import json
 import time
+import traceback
 from D2API.api import move_items_from_postmaster_to_vault
 
 from TaskControl.Base.BaseTask import Task, Event
 from TaskControl.CheckTask.CheckResultTask import CheckResultTask
-from TaskControl.CheckTask.CheckXReadyTask import CheckXReadyTask
+from TaskControl.CheckTask.CheckXReadyTask import CheckXReadyTask, CheckDodgeReadyTask, CheckSwordReadyTask
+from TaskControl.CheckTask.CheckShieldTask import CheckShieldTask
 from TaskControl.CheckTask.EnterMapTask import EnterMapTask
 from TaskControl.CheckTask.PlayerDieCheckTask import PlayerDieCheckTask
 from TaskControl.CheckTask.ShotTask import ShotTask
 from TaskControl.CheckTask.CheckRebornTask import CheckRebornTask
 from TaskControl.my_directx import (
-    wake_up_boss,
+    real_wake_up_boss,
+    wake_up_boss_and_move,
     shot_and_do_finisher,
     refresh_checkpoint,
     hide_indebted_kindess,
     async_hide_indebted_kindess,
-    WAKE_UP_SLEEP_TIME,
     suicide_before_kick,
     release_key_on_cancel,
 )
 from TaskControl.Base.TimerManager import TimerManager, Global_Queue
 from TaskControl.Base.CommonLogger import my_logger
+from TaskControl.Base import GlobalVars
+from screenshot import init_image
 
 from settings import monitor_settings, base_settings
-from screenshot import ConfigKeys, get_similarity_result, init_image
 from utils import get_log_path
 from my_window.MainWindow import log_window
 
@@ -65,15 +68,26 @@ class RuinFarmTask(Task):
         self.continuous_fail_count = 0
         self.main_task = None
         self.thread_running = False
+        self.shied_task_complete = False
         self.data = Data()
 
     def init_tasks(self):
-        self.check_x_ready = self.init_task(CheckXReadyTask, self.on_x_ready)
+        self.pre_check_task = self.init_task(self.get_pre_check_task(), self.on_pre_check)
         self.enter_map = self.init_task(EnterMapTask, self.on_enter_map)
         self.player_die_check = self.init_task(PlayerDieCheckTask, self.on_player_die)
         self.check_result = self.init_task(CheckResultTask, self.on_check_result)
+        self.check_shield_task = self.init_task(CheckShieldTask, self.on_check_shield)
         self.shot_task = self.init_task(ShotTask)
         self.check_reborn_task = self.init_task(CheckRebornTask, self.on_player_reborn)
+
+    def get_pre_check_task(self):
+        if monitor_settings.检测技能就绪 == 1:
+            return CheckXReadyTask
+        elif monitor_settings.检测技能就绪 == 2:
+            return CheckDodgeReadyTask
+        elif monitor_settings.检测技能就绪 == 3:
+            return CheckSwordReadyTask
+        raise Exception("不支持的运行模式，请重新调整设置文件")
 
     def init_task(self, task_class, event_handler=None):
         task = task_class()
@@ -86,7 +100,6 @@ class RuinFarmTask(Task):
         try:
             asyncio.run(self.check_queue())
         except Exception as e:
-            import traceback
 
             with open(get_log_path(), "a", encoding="utf-8") as f:
                 f.write(traceback.format_exc() + "\n")
@@ -103,69 +116,63 @@ class RuinFarmTask(Task):
             await asyncio.sleep(1 / 30)
 
     async def main(self):
+        loop = asyncio.get_event_loop()
         try:
             self.data.start_count += 1
             self.log(f"start main")
-            await self.wake_up_boss()
-            self.log(f"wake_up_boss completed")
-            await asyncio.sleep(monitor_settings.等待黄血刷新时间 - WAKE_UP_SLEEP_TIME - 0.2)
+            await self.wake_up_boss_and_move()
+            self.log(f"wake_up_boss_and_move completed")
             await self.shot_and_do_finisher()
-            self.log(f"shot_and_do_finisher completed")
-            await asyncio.sleep(0.1)
-            await self.check_shield()
-            # self.move_and_waiting_result()
+            await self.wait_shied_result()
             await self.async_move_and_waiting_result()
         except asyncio.CancelledError:
             self.log(f"main was cancelled")
             release_key_on_cancel()
 
-    async def wake_up_boss(self):
-        self.log(f"wake_up_boss")
-        wake_up_boss()
+    async def wake_up_boss_and_move(self):
+        self.log(f"wake_up_boss_and_move")
+        wake_up_boss_and_move()
         self.player_die_check.start()
 
     async def shot_and_do_finisher(self):
         shot_and_do_finisher()
+        self.shied_task_complete = False
+        self.check_shield_task.start()
 
-    async def check_shield(self):
-        hp_bar_mask_ratio = get_similarity_result(ConfigKeys.FINISH_HP_BAR)
-        self.log(f"check_shield hp_bar_mask_ratio={hp_bar_mask_ratio}")
-        if hp_bar_mask_ratio >= 0.8:
-            self.data.finisher_count += 1
-            self.log(f"check_shield SUCC", emit=True)
-            await asyncio.sleep(2)
-        else:
+    async def wait_shied_result(self):
+        wait_time = 10
+        while not self.shied_task_complete and wait_time > 0:
             await asyncio.sleep(1)
-            hp_bar_mask_ratio = get_similarity_result(ConfigKeys.FINISH_HP_BAR)
-            if hp_bar_mask_ratio >= 0.8:
-                self.data.finisher_count += 1
-                self.log(f"check_shield SUCC", emit=True)
-                await asyncio.sleep(1)
-            else:
-                self.data.die_before_kick_boss += 1
-                self.log(f"check_shield Fail", emit=True)
-                # 等死亡检查开启下一轮
-                suicide_before_kick(move_back=False)
-                await asyncio.sleep(2)
+            wait_time -= 1
+        # 这个时候还没有完成终结动作，所以这里有个sleep
+        await asyncio.sleep(1)
+
+    def on_check_shield(self, event):
+        data = event.data
+        time_out = data["time_out"]
+        self.shied_task_complete = True
+        if time_out:
+            self.log(f"check_shield Fail", emit=True)
+            suicide_before_kick()
+        else:
+            self.data.finisher_count += 1
+            self.log(f"check_shield Success", emit=True)
         self.log(f"check_shield completed")
 
     async def async_move_and_waiting_result(self):
-        await async_hide_indebted_kindess()
-        self.log(f"waiting_result_check")
-        self.check_result.start()
-        self.shot_task.start()
-
-    def move_and_waiting_result(self):
+        self.log(f"move_to_wait")
         hide_indebted_kindess()
+        # await async_hide_indebted_kindess()
         self.log(f"waiting_result_check")
         self.check_result.start()
-        self.shot_task.start()
+        # self.shot_task.start()
 
-    def on_x_ready(self, event: Event):
+    def on_pre_check(self, event: Event):
         self.thread_running = False
         data = event.data
         check_time_out = data["check_time_out"]
-        self.log(f"on_x_ready  time_out={int(check_time_out)}", emit=True)
+        self.log(f"on_pre_check time_out={int(check_time_out)}", emit=True)
+        self.log(f"class_skill={int(GlobalVars.class_skill_ready)}", emit=True)
         if check_time_out:
             # x 检查连续失败 15 次，可能进牢里了，重新进图试一试
             self.continuous_fail_count = CONTINUOUS_FAIL_COUNT_MAX + 1
@@ -192,21 +199,8 @@ class RuinFarmTask(Task):
             self.need_refresh_checkpoint = True
             self.continuous_fail_count = 0
             self.start_enter_map(reward=True)
-            # TimerManager.add_timer(1, self.delay_enter_map)
         else:
             suicide_before_kick()
-            self.start_check_player_reborn()
-
-    def delay_enter_map(self):
-        # self.start_enter_map(reward=True)
-        normal_hp_bar_mask_ratio = get_similarity_result(ConfigKeys.NORMAL_HP_BAR)
-        self.log(f"delay_enter_map {normal_hp_bar_mask_ratio:.2f}", emit=True)
-        if normal_hp_bar_mask_ratio >= 0.8:
-            Global_Queue.put((self.start_enter_map, True))
-        else:
-            self.stop_all_checks()
-            suicide_before_kick()
-            self.start_check_player_reborn()
 
     def start_enter_map(self, reward=False):
         # 进图关闭其它检测
@@ -227,8 +221,10 @@ class RuinFarmTask(Task):
             self.need_refresh_checkpoint = False
             refresh_checkpoint()
         # 重新进图也要自杀，因为开始进图也会传送到牢里，先自杀一下
-        suicide_before_kick(move_back=False)
-        time.sleep(4)
+        real_wake_up_boss()
+        time.sleep(1)
+        suicide_before_kick()
+        time.sleep(2)
         self.log("自杀完成")
         self.start_check_player_reborn()
         # self.clear_timer_and_restart()
@@ -259,7 +255,7 @@ class RuinFarmTask(Task):
 
         if not self.thread_running:
             self.thread_running = True
-            t = threading.Thread(target=self.check_x_ready.start)
+            t = threading.Thread(target=self.pre_check_task.start)
             self.log(f"start_check_x_ready", emit=True)
 
             t.setDaemon(True)
@@ -269,7 +265,8 @@ class RuinFarmTask(Task):
         self.player_die_check.stop_check()
         self.shot_task.stop_check()
         self.check_result.stop_check()
-        self.check_x_ready.stop_check()
+        self.pre_check_task.stop_check()
+        self.check_shield_task.stop_check()
         # 清空消息队列
         self.cancel_main()
         Global_Queue.queue.clear()

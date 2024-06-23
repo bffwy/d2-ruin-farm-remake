@@ -15,8 +15,8 @@ MONITOR_WIDTH, MONITOR_HEIGHT = ImageGrab.grab().size
 
 file_path = get_real_path("yolov8/best.pt", "resource")
 model = YOLO(file_path)  # pretrained YOLOv8n model
-images = get_real_path("test.png", "resource")
-results = model.predict(source=images, conf=0.6)
+# images = get_real_path("test.png", "resource")
+# results = model.predict(source=images, conf=0.6)
 
 
 def result_save(result, ts):
@@ -24,7 +24,7 @@ def result_save(result, ts):
     result.save(filename=f"./debug/{ts}_boss.jpg")
 
 
-@timer_log
+# @timer_log
 def get_boss_result(image: Image.Image, conf, save=False):
     try:
         global model

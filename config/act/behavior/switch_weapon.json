@@ -1,0 +1,14 @@
+{
+    "actions": [
+        {
+            "注释": "切到2号位武器",
+            "type": "press",
+            "key": "2"
+        },
+        {
+            "type": "wait",
+            "duration": 1,
+            "blocking": true
+        }
+    ]
+}

@@ -1,0 +1,36 @@
+{
+    "actions": [
+        {
+            "注释": "切换 2 号位武器",
+            "type": "press",
+            "key": "2"
+        },
+        {
+            "type": "wait",
+            "duration": 1,
+            "blocking": true
+        },
+        {
+            "注释": "准心移到boss上",
+            "type": "mouse_move",
+            "relative": [
+                -42,
+                -40
+            ]
+        },
+        {
+            "type": "wait",
+            "duration": 0.5,
+            "blocking": true
+        },
+        {
+            "注释": "左键开枪",
+            "type": "leftClick"
+        },
+        {
+            "type": "wait",
+            "duration": 0.2,
+            "blocking": true
+        }
+    ]
+}

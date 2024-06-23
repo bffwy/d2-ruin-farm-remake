@@ -13,37 +13,23 @@ class BaseSettings:
     log_level: str
     debug: bool
 
-    职业技能按键: str
-    未充能近战按键: str
-    跳隐身按键: str
-    终结技按键: str
-    埋头表情按键: str
-
     使用DIM功能: bool
     开启log窗口: bool
     连续失败次数: int
-    进图等待间隔: float
-    重置进度次数: int
-    大师难度: bool
 
 
 @dataclasses.dataclass
 class Config:
-    开boss鼠标偏移: tuple[int]
-    隐身后往左走时间: float
-    隐身后往右走时间: float
-    隐身后往前走时间: float
-
-    射击黄血鼠标偏移: tuple[int]
-    等待黄血刷新时间: float
-
-    躲藏第一段位移镜头偏移: tuple[int]
-    躲藏第一段位移时间: float
-
-    躲藏第二段位移镜头偏移: tuple[int]
-    躲藏第二段位移时间: float
-
-    回头看boss: tuple[int]
+    检测技能前切枪: str
+    检测技能就绪: int
+    开boss到射击前: str
+    射击终结: str
+    藏头行为: str
+    开boss: str
+    打开地图和难度选择: str
+    开启下一轮: str
+    重置进度: str
+    自杀: str
 
 
 settings = tomllib.loads(SETTINGS_PATH.read_text("utf-8"))

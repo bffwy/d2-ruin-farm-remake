@@ -1,0 +1,47 @@
+{
+    "actions": [
+        {
+            "注释": "开枪",
+            "type": "leftClick"
+        },
+        {
+            "注释": "关镜",
+            "type": "mouseUp",
+            "key": "right"
+        },
+        {
+            "注释": "调整一下身位，朝向boss（可以去掉）",
+            "type": "mouse_move",
+            "relative": [
+                -30,
+                0
+            ]
+        },
+        {
+            "type": "wait",
+            "duration": 0.01,
+            "blocking": true
+        },
+        {
+            "注释": "按住终结键",
+            "type": "key",
+            "name": "v",
+            "duration": 1.5,
+            "blocking": false
+        },
+        {
+            "注释": "按住 shift",
+            "type": "key",
+            "name": "shiftleft",
+            "duration": 1.5,
+            "blocking": false
+        },
+        {
+            "注释": "按住 w 往前跑",
+            "type": "key",
+            "name": "w",
+            "duration": 1.5,
+            "blocking": true
+        }
+    ]
+}

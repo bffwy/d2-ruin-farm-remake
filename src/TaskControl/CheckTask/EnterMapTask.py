@@ -1,10 +1,11 @@
-from TaskControl.Base.BaseTask import Task
+from TaskControl.Base.CheckTaskBase import CheckTaskBase
 from TaskControl.my_directx import *
+from screenshot import get_similarity
 from TaskControl.Base.TimerManager import TimerManager
 from TaskControl.Base.CommonLogger import my_logger
 
 
-class EnterMapTask(Task):
+class EnterMapTask(CheckTaskBase):
     enter_map_time = 20
     check_load_map_time_out_interval = 10
     check_similarity = 0.7
@@ -16,16 +17,14 @@ class EnterMapTask(Task):
         self.timeout_timer_id = None
         self.check_timer_id = None
         self.finish_check = False
-        self.register_event(self.on_map_load)
 
     def start(self, reward=False):
+        self.enter_map(reward)
+
+    def enter_map(self, reward):
         self.event.data = {"reward": reward}
         my_logger.info(f"开始进图 reward={reward}")
-        self.event.triggered = False
-        start_next_round(reward=reward)
-        self.enter_map()
-
-    def enter_map(self):
+        start_next_round()
         self.timer_id = TimerManager.add_timer(self.enter_map_time, self.check_load_map)
 
     def check_load_map(self):
@@ -33,24 +32,9 @@ class EnterMapTask(Task):
         self.real_check_load_map()
 
     def real_check_load_map(self):
-        x = get_similarity_result(ConfigKeys.ENTER_MAP_BBOX)
+        x = get_similarity(self.check_image, self.check_box, self.base_on_2560, self.debug)
         if x >= self.check_similarity:
             my_logger.info(f"real_check_load_map finish similarity={x}")
-            self.event.trigger()
+            self.trigger()
             return
         self.check_timer_id = TimerManager.add_timer(self.check_interval, self.real_check_load_map)
-
-    def on_map_load(self, event):
-        # data = event.data
-        # my_logger.info(f"on_map_load_finish move_items={data.get('reward')}")
-        # if data.get("reward"):
-        #     move_items_from_postmaster_to_vault()
-        if self.timeout_timer_id:
-            TimerManager.cancel_timer(self.timeout_timer_id)
-
-    def event_time_out(self):
-        my_logger.info(f"event_map time_out")
-        if self.timer_id:
-            TimerManager.cancel_timer(self.timer_id)
-        super().event_time_out()
-        # self.event.trigger()
