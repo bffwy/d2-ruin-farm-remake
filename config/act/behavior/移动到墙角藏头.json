@@ -4,7 +4,7 @@
             "注释": "第一次转视角",
             "type": "mouse_move",
             "relative": [
-                -370,
+                -390,
                 0
             ]
         },
@@ -12,20 +12,27 @@
             "注释": "按住shit",
             "type": "key",
             "name": "shiftleft",
-            "duration": 4,
+            "duration": 3.5,
             "blocking": false
         },
         {
             "注释": "按住 w",
             "type": "key",
             "name": "w",
-            "duration": 4,
+            "duration": 3.5,
+            "blocking": false
+        },
+        {
+            "注释": "按住 a",
+            "type": "key",
+            "name": "a",
+            "duration": 0.3,
             "blocking": false
         },
         {
             "注释": "第一段位移时间",
             "type": "wait",
-            "duration": 2.15,
+            "duration": 2.3,
             "blocking": true
         },
         {
@@ -39,7 +46,7 @@
         {
             "注释": "第二段位移时间",
             "type": "wait",
-            "duration": 2.5,
+            "duration": 1.5,
             "blocking": true
         },
         {

@@ -8,15 +8,15 @@ debug = false
 
 [monitor]
 "检测技能就绪" = 1 # 1:猎人充能近战(x); 2:猎人闪身; 3:心影刀充能(不用检测，因为切到刀是满充能);
-"开boss到射击前" =  "x_mod" # dodge_mod需要100敏捷 sword_mod需要带心影
+"开boss到射击前" =  "猎人x技能开局" # dodge_mod需要100敏捷 sword_mod需要带心影
 
-"检测技能前切枪" = "switch_weapon"
-"射击终结" =  "shot_and_finisher"
-"藏头行为" = "move_and_hide"
-"开boss" = "wake_up_boss"
-"自杀" = "suicide_1"
+"检测技能前切枪" = "切换到2号位武器"
+"射击终结" =  "射击黄血和终结"
+"藏头行为" = "移动到墙角藏头"
+"开boss" = "开局开boss"
+"自杀" = "3号位武器自杀"
 
-"打开地图和难度选择" = "open_map_master"
-"开启下一轮"= "start_next_round"
-"重置进度" = "refresh_checkpoint"
+"打开地图和难度选择" = "选择大师难度"
+"开启下一轮"= "重新进图"
+"重置进度" = "重置进度"
 

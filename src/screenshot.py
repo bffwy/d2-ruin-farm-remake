@@ -23,6 +23,38 @@ def load_image_cv(image_path):
         raise Exception(f"加载图片 {image_path} 失败") from e
 
 
+@lru_cache(maxsize=None)
+def load_image_raw(image_path):
+    try:
+        return cv2.imread(image_path)
+    except Exception as e:
+        raise Exception(f"加载图片 {image_path} 失败") from e
+
+
+def compare_hist(img1, img2):
+    # 将图像转换为HSV颜色空间
+    img1_hsv = cv2.cvtColor(img1, cv2.COLOR_BGR2HSV)
+    img2_hsv = cv2.cvtColor(img2, cv2.COLOR_BGR2HSV)
+
+    # 计算图像的直方图
+    hist1 = cv2.calcHist([img1_hsv], [0, 1], None, [180, 256], [0, 180, 0, 256])
+    hist2 = cv2.calcHist([img2_hsv], [0, 1], None, [180, 256], [0, 180, 0, 256])
+
+    # 归一化直方图
+    cv2.normalize(hist1, hist1, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX)
+    cv2.normalize(hist2, hist2, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX)
+
+    # 计算直方图相似性
+    similarity = cv2.compareHist(hist1, hist2, cv2.HISTCMP_CORREL)
+
+    return similarity
+
+
+def get_hsv_similarity(grabbed_image, local_image):
+    img = cv2.cvtColor(np.asarray(grabbed_image), cv2.COLOR_RGB2BGR)
+    return compare_hist(local_image, img)
+
+
 def get_template_similarity(image: Image.Image, template: cv2.typing.MatLike):
     image_cv = convert_image_to_open_cv(image)
     result = cv2.matchTemplate(image_cv, template, cv2.TM_CCOEFF_NORMED)
@@ -59,8 +91,10 @@ def check_bbox(bbox):
         if coordinate < 0:
             return False
         if i % 2 == 0 and coordinate > MONITOR_WIDTH:
+            print(f"{coordinate}:{MONITOR_WIDTH}")
             return False
         elif i % 2 == 1 and coordinate > MONITOR_HEIGHT:
+            print(f"{coordinate}:{MONITOR_HEIGHT}")
             return False
     return True
 
@@ -77,16 +111,24 @@ def get_similarity(path, bbox, base_on_2560, debug):
     if not os.path.exists(real_path):
         raise Exception(f"{real_path} 不存在, 影响到正常功能")
     image_cv = load_image_cv(real_path)
-    if not check_bbox(bbox):
-        raise Exception(f"{bbox}: bbox 不合法")
+    # image_raw = load_image_raw(real_path)
+    ori_box = bbox.copy()
     if base_on_2560:
         bbox = replace_coordinates(bbox)
+    if not check_bbox(bbox):
+        raise Exception(f"{ori_box}: bbox 不合法")
+
     grabbed_image = grab_image(bbox)
     ret = get_template_similarity(grabbed_image, image_cv)
+    # hsv_ret = get_hsv_similarity(grabbed_image, image_raw)
+    # logger.info(f"hsv_ret: {hsv_ret}")
+    # logger.info(f"ret: {ret}")
     if debug:
         time_str = datetime.now().strftime("%Y-%m-%d_%H-%M-%S-%f")
-        file_name = f"{path}_{time_str}_{ret:.3f} debug.png"
+        file_name = f"{path}_{time_str}_相似度{ret:.2f}.png"
         logger.debug(f"Debug 保存图片: {file_name}")
+        if not os.path.exists("./debug"):
+            os.makedirs("./debug")
         grabbed_image.save(f"./debug/{file_name}")
 
     return ret
@@ -100,6 +142,7 @@ def test_get_image(bbox):
     image = ImageGrab.grab(bbox)
     file_name = f"{test_get_image.__name__}.png"
     image.save(f"./debug/{file_name}")
+    return image
 
 
 def crop_image(image_path, path_name, bbox):
@@ -126,6 +169,23 @@ def init_image():
                         crop_image(crop_path, path_name, bbox)
 
 
-# init_image()
-# test_get_image(X_BBOX)
-# print(get_similarity_result(ConfigKeys.CHECK_DIE))
+def get_image_box():
+    d = {}
+    file_path = get_real_path("task_config.json", "config")
+    if os.path.exists(file_path):
+        with open(file_path, "r", encoding="utf-8") as f:
+            config = json.load(f)
+        for task_name, task_config in config.items():
+            if "check_box" not in task_config:
+                continue
+            bbox = task_config["check_box"]
+            d[task_name] = bbox
+    return d
+
+
+# boxes = get_image_box()
+# # test_get_image(boxes["CheckShieldTask"])
+# get_similarity("finisher_hp_bar", boxes["CheckShieldTask"], True, True)
+# a = "./debug/finisher_hp_bar_2024-06-27_23-23-43-173125_相似度0.00.png"
+# b = "./asset/finisher_hp_bar_2560.png"
+# grabbed_image = Image.open(a)

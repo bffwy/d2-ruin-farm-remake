@@ -1,6 +1,18 @@
 {
     "actions": [
         {
+            "注释": "按下闪身",
+            "type": "press",
+            "key": "0"
+        },
+        {
+            "注释": "闪身位置往后",
+            "type": "key",
+            "name": "w",
+            "duration": 0.2,
+            "blocking": true
+        },
+        {
             "注释": "切3号位武器自杀",
             "type": "press",
             "key": "3"

@@ -9,7 +9,7 @@
             "注释": "往右移动 1.2s",
             "type": "key",
             "name": "d",
-            "duration": 1.2,
+            "duration": 1.1,
             "blocking": true
         },
         {
@@ -35,7 +35,7 @@
             "注释": "往前走 0.5s",
             "type": "key",
             "name": "w",
-            "duration": 0.5,
+            "duration": 1,
             "blocking": true
         },
         {
@@ -55,21 +55,21 @@
         },
         {
             "type": "wait",
-            "duration": 0.3,
+            "duration": 0.5,
             "blocking": true
         },
         {
             "注释": "移到黄血怪预瞄位置",
             "type": "mouse_move",
             "relative": [
-                -280,
-                160
+                -252,
+                165
             ]
         },
         {
             "注释": "射击前等待",
             "type": "wait",
-            "duration": 5.8,
+            "duration": 5.34,
             "blocking": true
         }
     ]

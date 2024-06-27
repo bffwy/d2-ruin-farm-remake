@@ -32,7 +32,12 @@
             "blocking": true
         },
         {
-            "注释": "往前移动 1.2s",
+            "type": "wait",
+            "duration": 0.0,
+            "blocking": true
+        },
+        {
+            "注释": "往前移动 1.4s",
             "type": "key",
             "name": "w",
             "duration": 1.4,
@@ -53,13 +58,13 @@
             "type": "mouse_move",
             "relative": [
                 -268,
-                160
+                158
             ]
         },
         {
             "注释": "射击前等待",
             "type": "wait",
-            "duration": 5.908,
+            "duration": 5.960,
             "blocking": true
         }
     ]

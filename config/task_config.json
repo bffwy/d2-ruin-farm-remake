@@ -16,7 +16,7 @@
     },
     "CheckBossExitTask": {
         "check_interval": 0.3,
-        "check_conf": 0.6,
+        "check_conf": 0.7,
         "save_result": false,
         "check_time_out": 30,
         "_comment": "检测boss传送回来, check_conf 表示boss的置信度，save_result 表示是否保存结果, 会保存结果到debug目录"
@@ -37,7 +37,7 @@
         "_comment": "检测boss血条消失，check_interval太大可能会导致进牢里"
     },
     "CheckXReadyTask": {
-        "check_interval": 3,
+        "check_interval": 2,
         "check_similarity": 0.8,
         "re_enter_map_check_time": 20,
         "repeated_fail_max": 80,
@@ -70,7 +70,7 @@
     },
     "EnterMapTask": {
         "enter_map_time": 20,
-        "check_load_map_time_out_interval": 10,
+        "check_load_map_time_out_interval": 60,
         "check_similarity": 0.7,
         "check_interval": 1,
         "check_box": [
@@ -102,7 +102,7 @@
     "CheckShieldTask": {
         "check_similarity": 0.96,
         "check_interval": 0.5,
-        "check_time_out": 2.5,
+        "check_time_out": 1.5,
         "_comment": "检测感应护盾",
         "check_box": [
             990,

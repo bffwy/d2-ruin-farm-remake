@@ -21,7 +21,7 @@
         },
         {
             "type": "wait",
-            "duration": 0.1,
+            "duration": 0.2,
             "blocking": true
         },
         {
@@ -65,7 +65,7 @@
         },
         {
             "type": "wait",
-            "duration": 0.1,
+            "duration": 0.3,
             "blocking": true
         },
         {

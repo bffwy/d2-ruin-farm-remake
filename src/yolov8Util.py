@@ -39,10 +39,10 @@ def get_boss_result(image: Image.Image, conf, save=False):
                 if class_item == float(1):
                     # # yolobbox2bbox(*class_xywh)
                     # if save:
-                    #     now_time = datetime.now()
-                    #     ts = now_time.strftime("%m-%d_%H_%M_%S")
-                    #     t = threading.Thread(target=result_save, args=(result, ts))
-                    #     t.start()
+                    now_time = datetime.now()
+                    ts = now_time.strftime("%m-%d_%H_%M_%S")
+                    t = threading.Thread(target=result_save, args=(result, ts))
+                    t.start()
                     return True
         return False
     except Exception as e:
